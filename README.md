@@ -1,115 +1,214 @@
-# beauty-consumer-intelligence
-# Retail Demand Planning & Forecasting
+# Beauty Consumer Intelligence
 
-An interactive demand-planning application that turns historical retail sales data into forward-looking inventory and planning insights.
+An interactive consumer and brand intelligence application exploring when product attention translates into consumer love — and when it creates an expectation gap.
 
 **Live Application:**  
-https://retail-demand-planning-ttcwzam3p4or4fumngwsoc.streamlit.app/
+https://beauty-consumer-intelligence.streamlit.app/
 
 ---
 
 ## Overview
 
-Retail demand planning is not just about predicting a number. Decision-makers need to understand:
+Popular products are not necessarily the products delivering the strongest consumer experience.
 
-- What is demand doing now?
-- Is recent performance stronger or weaker than last year?
-- How seasonal is the product?
-- What should we expect next?
-- How much confidence should we place in the forecast?
+This project analyzes Sephora product and review data to explore the relationship between:
 
-This project builds an interactive demand-planning workflow around those questions.
+- product attention
+- consumer experience
+- review language
+- audience characteristics
 
-Rather than presenting a static forecasting notebook, the application allows users to explore demand patterns across stores and products, evaluate recent year-over-year momentum, and generate forecasts using historical seasonality.
+The goal is to move beyond simple ratings and identify strategically different types of products:
+
+- **Proven Favorites**
+- **Hidden Gems**
+- **Expectation Gaps**
+- **Lower-Traction Products**
+
+The application then helps diagnose *why* a product may occupy one of those positions by examining review themes and consumer differences.
 
 ---
 
 ## Business Question
 
-**How can historical store-item demand be translated into a practical planning signal for future inventory and demand decisions?**
+**When does product attention translate into consumer love — and when does it create an expectation gap?**
 
-The application focuses on three components:
+The analysis is designed around a brand-strategy problem.
 
-1. **Historical Demand** — understanding long-term volume and seasonality
-2. **Recent Momentum** — identifying whether demand is strengthening or weakening versus the comparable period last year
-3. **Forward Forecasting** — estimating expected future demand while validating the forecasting approach against historical data
+A highly visible product with a strong consumer experience represents a very different strategic situation from a highly visible product receiving weaker consumer feedback.
 
----
-
-## What the Application Does
-
-### Historical Demand Analysis
-
-Users can select individual stores and items to explore:
-
-- historical sales volume
-- long-term demand patterns
-- seasonality
-- recent performance
-
-This creates the context necessary before interpreting a forecast.
-
-### Recent YoY Momentum
-
-Recent demand is compared with the equivalent period from the prior year.
-
-The momentum signal uses the latest 90 days of available demand and compares it with the same calendar period one year earlier.
-
-This helps distinguish:
-
-- accelerating demand
-- relatively stable demand
-- weakening demand
-
-Using the comparable prior-year period prevents normal seasonal changes from being mistaken for genuine momentum.
-
-### Forecasting
-
-The application evaluates forecasting approaches using historical data before producing the forward-looking forecast.
-
-The forecasting workflow incorporates recurring seasonal demand patterns rather than simply extending the latest trend.
-
-This allows the model to account for the fact that retail demand may naturally rise and fall at different points of the year.
-
-### Forecast Validation
-
-Forecasting performance is evaluated against historical observations.
-
-The application compares seasonal forecasting approaches to determine whether the selected model improves on a straightforward seasonal baseline.
-
-This is important because a more complex model should only be preferred when it provides meaningful forecasting value.
+Likewise, a product with relatively limited attention but strong consumer experience may represent an under-recognized opportunity.
 
 ---
 
 ## Dataset
 
-The project uses the **Store Item Demand Forecasting Challenge** dataset originally published on Kaggle.
+The analysis uses Sephora product and consumer review data containing:
 
-The dataset contains daily sales observations from:
+- **1,873 products**
+- **1,089,331 consumer reviews**
 
-- **10 stores**
-- **50 items**
-- **2013–2017**
+The raw review data was processed and aggregated into deployment-ready analytical datasets for the interactive application.
 
-This provides multiple years of daily observations for analyzing seasonality, demand patterns, and forecasting performance.
+The source data includes information such as:
+
+- product
+- brand
+- category
+- price
+- Sephora loves
+- review volume
+- consumer rating
+- recommendation behavior
+- review text
+- reviewer-reported skin type
 
 ---
 
-## Analytical Approach
+## Analytical Framework
 
-The project follows a practical demand-planning workflow:
+The core framework evaluates products across two dimensions:
 
-**Historical Sales**
-↓
-**Demand & Seasonality Analysis**
-↓
-**Recent Year-over-Year Momentum**
-↓
-**Forecast Validation**
-↓
-**Forward Demand Forecast**
+### Relative Attention Index
 
-The goal is not simply to generate a prediction, but to provide enough context for someone to understand what is driving the planning signal.
+A relative measure of observed product attention within the analyzed Sephora portfolio.
+
+The index combines:
+
+- **60% — percentile-ranked Sephora loves**
+- **40% — percentile-ranked review volume**
+
+This is intentionally described as **relative attention**, not awareness or sales.
+
+The dataset does not contain verified advertising spend, brand awareness, market share, or unit sales.
+
+### Consumer Experience Index
+
+A composite measure designed to capture the strength of the consumer experience.
+
+The index combines:
+
+- **55% — normalized average consumer rating**
+- **30% — recommendation rate**
+- **15% — share of reviews receiving 4–5 stars**
+
+Together, these measures provide a broader view of consumer experience than average star rating alone.
+
+---
+
+## Strategic Product Classification
+
+Products are compared with portfolio medians on both dimensions.
+
+### Proven Favorite
+
+**Higher Attention + Higher Consumer Experience**
+
+The product is receiving substantial attention while also delivering a relatively strong consumer experience.
+
+**Strategic question:**  
+How can the brand protect what consumers value and scale credible consumer proof?
+
+### Hidden Gem
+
+**Lower Attention + Higher Consumer Experience**
+
+Consumers who reach the product report a relatively strong experience, but observed attention remains below the portfolio benchmark.
+
+**Strategic question:**  
+Could stronger discovery, merchandising, sampling, creator support, or positioning unlock additional attention?
+
+### Expectation Gap
+
+**Higher Attention + Lower Consumer Experience**
+
+The product receives substantial attention, but the consumer experience falls below the portfolio benchmark.
+
+**Strategic question:**  
+What friction or expectation-setting problem should be addressed before increasing attention further?
+
+### Lower Traction
+
+**Lower Attention + Lower Consumer Experience**
+
+Both dimensions sit below the portfolio benchmark.
+
+**Strategic question:**  
+Does the product require repositioning, tighter targeting, product improvement, or lower portfolio priority?
+
+---
+
+## Consumer Language Analysis
+
+The application goes beyond product-level scores by analyzing recurring themes within consumer reviews.
+
+Review themes are identified using transparent keyword dictionaries.
+
+Examples of themes can include aspects of the consumer experience such as:
+
+- hydration
+- texture
+- scent
+- packaging
+- irritation
+- value
+- application
+
+For each recurring theme, the application examines its association with stronger and weaker review outcomes.
+
+### Positive-Rated Share
+
+The percentage of reviews mentioning a theme that received a **4–5 star rating**.
+
+### Negative-Rated Share
+
+The percentage of reviews mentioning a theme that received a **1–2 star rating**.
+
+These measures identify themes associated with stronger or weaker review experiences.
+
+They are not sentence-level sentiment classification and do not imply that every individual mention of a theme was positive or negative.
+
+---
+
+## Consumer Differences
+
+The application also examines whether product experience differs across reviewer-reported skin types.
+
+Only segments with sufficient review observations are displayed.
+
+This can reveal situations where the same product receives somewhat different experiences across consumer groups.
+
+These comparisons are descriptive and should not be interpreted as causal relationships.
+
+---
+
+## Application Structure
+
+The dashboard moves from portfolio-level intelligence to individual product diagnosis:
+
+**01 — Market Pulse**  
+Where is consumer attention going?
+
+**02 — Attention vs Experience**  
+Does attention translate into consumer love?
+
+**03 — Brand Intelligence**  
+Which brands convert attention into stronger consumer experience?
+
+**04 — Product Deep Dive**  
+How is an individual product positioned?
+
+**05 — Consumer Language**  
+What do consumers love — and where does experience break?
+
+**06 — Consumer Differences**  
+Does experience differ across consumer groups?
+
+**07 — Strategic Implication**  
+What should the brand investigate next?
+
+**08 — Portfolio Priorities**  
+Which products deserve closer attention?
 
 ---
 
@@ -118,60 +217,58 @@ The goal is not simply to generate a prediction, but to provide enough context f
 - **Python**
 - **Pandas**
 - **NumPy**
-- **Statsmodels**
 - **Plotly**
 - **Streamlit**
-- Time-series forecasting
-- Forecast validation
+- Review-text analysis
+- Consumer segmentation
+- Composite index development
 - Interactive data visualization
 
 ---
 
 ## Why I Built This
 
-I wanted to build a project that went beyond exploratory data analysis and demonstrated how analytics can support an actual operating decision.
+Many consumer analytics projects stop at identifying highly rated products or frequently mentioned review terms.
 
-Demand forecasting becomes more useful when the prediction is connected to:
+I wanted to approach the dataset from a more strategic perspective:
 
-- historical context
-- seasonality
-- recent momentum
-- model validation
+**Attention alone does not tell us whether consumers are satisfied, and satisfaction alone does not tell us whether a product is being discovered.**
 
-The project therefore focuses on turning time-series analysis into a decision-support tool rather than presenting a forecasting model in isolation.
+Combining those dimensions creates a more useful framework for identifying different product opportunities and risks.
+
+The review-language and consumer-segment analyses then provide additional context for understanding what may be driving those signals.
 
 ---
 
-## Limitations
+## Important Limitations
 
-This is a portfolio analytics project and not a production inventory optimization system.
+The source data does **not** provide verified:
 
-The dataset does not include several variables that would typically influence real-world retail demand, including:
+- unit sales
+- revenue
+- market share
+- advertising spend
+- customer acquisition cost
+- gross margin
+- profitability
 
-- promotions
-- pricing changes
-- inventory availability
-- stockouts
-- holidays and events
-- competitor activity
-- product lifecycle changes
-- supplier lead times
+For that reason, the project does not claim to measure commercial performance.
 
-A production demand-planning system would incorporate these factors alongside historical sales.
+It should be interpreted as a **consumer-intelligence and brand-strategy analysis**, not a sales or profitability model.
+
+The strategic classifications are also relative to the analyzed portfolio rather than absolute measures of product success.
 
 ---
 
 ## Live Demo
 
-Explore the application here:
+Explore the interactive application here:
 
-https://retail-demand-planning-ttcwzam3p4or4fumngwsoc.streamlit.app/
+https://beauty-consumer-intelligence.streamlit.app/
 
 ---
 
 ## Author
 
 **Tapan Mandal**
-
-
-Built as a portfolio project demonstrating demand forecasting, business analytics, and decision-oriented data visualization.
+Built as a portfolio project demonstrating consumer analytics, brand strategy, review-text analysis, and decision-oriented data visualization.
